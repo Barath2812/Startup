@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useAppContext } from "../hooks/useAppContext";
 import GooglePayButton from "../components/GooglePayButton";
 
 const Cart = () => {

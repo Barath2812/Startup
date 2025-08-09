@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAppContext } from '../../context/AppContext';
+import { useAppContext } from '../../hooks/useAppContext';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { assets } from '../../assets/assets';
 

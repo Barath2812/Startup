@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { assets } from '../assets/assets'
 import { useState } from 'react';
-import { useAppContext } from '../context/AppContext';
+import { useAppContext } from '../hooks/useAppContext';
 
 const InputField = ({type , placeholder , name , handleChange , address})=>(
     <input

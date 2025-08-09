@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAppContext } from '../../context/AppContext';
+import { useAppContext } from '../../hooks/useAppContext';
 
 const Dashboard = () => {
   const { axios, toast } = useAppContext();

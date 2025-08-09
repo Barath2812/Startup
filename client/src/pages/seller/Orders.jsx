@@ -1,6 +1,6 @@
 import React , { useState, useEffect } from "react";
 import {  assets} from "../../assets/assets";
-import { useAppContext } from "../../context/AppContext";
+import { useAppContext } from "../../hooks/useAppContext";
 
 
 const Orders = () => {

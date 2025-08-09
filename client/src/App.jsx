@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
 import {Toaster} from "react-hot-toast"
 import Footer from "./components/Footer.jsx";
-import { useAppContext } from "./context/AppContext.jsx";
+import { useAppContext } from "./hooks/useAppContext";
 import  Login  from "./components/Login.jsx";
 import  AllProducts  from "./pages/AllProducts.jsx";
 import  ProductCategory  from "./pages/ProductCategory.jsx";

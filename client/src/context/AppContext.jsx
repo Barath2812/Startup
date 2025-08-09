@@ -1,17 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
-
-// Determine backend URL based on environment
-const getBackendUrl = () => {
-  // If we're in production (Vercel), use relative URLs
-  if (import.meta.env.PROD) {
-    return "";
-  }
-  // For development, use the environment variable or default
-  return import.meta.env.VITE_BACKEND_URL || "http://localhost:5000" ;
-};
+import { getBackendUrl } from "../utils/config";
 
 const backendUrl = getBackendUrl();
 console.log("Backend URL:", backendUrl);
@@ -186,10 +177,7 @@ const AppContextProvider = ({ children }) => {
     );
 };
 
-const useAppContext = () => useContext(AppContext);
-
 export {
-    useAppContext,
     AppContext,
     AppContextProvider,
 };

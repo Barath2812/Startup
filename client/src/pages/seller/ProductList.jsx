@@ -1,5 +1,5 @@
 import React, { useState } from "react" 
-import { useAppContext } from "../../context/AppContext";
+import { useAppContext } from "../../hooks/useAppContext";
 
 const ProductList = () => {
     const [updatingStock, setUpdatingStock] = useState({});
