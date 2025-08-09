@@ -46,10 +46,7 @@ app.use(cookieParser());
 
 // CORS Configuration
 const allowedOrigins = [
-  "https://startup-two-eosin.vercel.app",     
-  "https://startup-frontend-five.vercel.app",
-  "https://startup-frontend.vercel.app",
-  "https://startup-client.vercel.app",
+  "https://startup-frontend-steel.vercel.app",
   "http://localhost:3000",                   
   "http://localhost:5173",
   process.env.FRONTEND_URL,
