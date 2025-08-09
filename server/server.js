@@ -52,7 +52,10 @@ const allowedOrigins = [
   "https://startup-client.vercel.app",
   "http://localhost:3000",                   
   "http://localhost:5173",
-  process.env.FRONTEND_URL                    
+  process.env.FRONTEND_URL,
+  // Add Vercel preview URLs
+  /https:\/\/.*\.vercel\.app$/,
+  /https:\/\/.*\.vercel\.app$/
 ].filter(Boolean);
 
 const corsOptions = {
@@ -100,9 +103,9 @@ app.options('*', cors(corsOptions));
 app.get('/', async (req, res) => {
   try {
     await initializeServices();
-    res.json({ 
-      message: 'Hello from RootCare Server!',
-      status: 'running',
+    res.json({
+      message: 'E-Commerce Startup API is running!',
+      status: 'healthy',
       timestamp: new Date().toISOString(),
       cors: {
         allowedOrigins,
@@ -198,7 +201,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+// Start Server (only if not in Vercel environment)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}
+
+// Export for Vercel serverless functions
+module.exports = app;

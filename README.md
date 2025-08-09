@@ -71,6 +71,10 @@ A full-stack e-commerce platform built with React.js, Node.js, and MongoDB. This
 
 2. **Install dependencies**
    ```bash
+   # Install all dependencies (root, server, and client)
+   npm run install:all
+   
+   # Or install separately:
    # Install server dependencies
    cd server
    npm install
@@ -107,6 +111,10 @@ A full-stack e-commerce platform built with React.js, Node.js, and MongoDB. This
 
 4. **Start the application**
    ```bash
+   # Start both frontend and backend (from root directory)
+   npm run dev
+   
+   # Or start separately:
    # Start the server (from server directory)
    npm run server
    
@@ -117,6 +125,33 @@ A full-stack e-commerce platform built with React.js, Node.js, and MongoDB. This
 5. **Access the application**
    - Frontend: http://localhost:5173
    - Backend API: http://localhost:5000
+
+## 🚀 Vercel Deployment
+
+### Quick Deployment
+
+1. **Connect to Vercel**:
+   - Go to [vercel.com](https://vercel.com)
+   - Click "New Project"
+   - Import your GitHub repository
+
+2. **Configure Project**:
+   - **Framework Preset**: Other
+   - **Root Directory**: `./` (root of your project)
+   - **Build Command**: `cd client && npm install && npm run build`
+   - **Output Directory**: `client/dist`
+   - **Install Command**: `npm run install:all`
+
+3. **Environment Variables**:
+   Add all required environment variables in Vercel dashboard (see `DEPLOYMENT.md` for full list)
+
+4. **Deploy**:
+   - Click "Deploy"
+   - Wait for the build to complete
+
+### Detailed Deployment Guide
+
+For comprehensive deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## 📁 Project Structure
 
@@ -141,6 +176,8 @@ Startup/
 │   ├── utils/            # Utility functions
 │   ├── package.json
 │   └── server.js         # Entry point
+├── vercel.json           # Vercel configuration
+├── package.json          # Root package.json
 └── README.md
 ```
 
@@ -243,6 +280,4 @@ For support, email support@yourstartup.com or create an issue in the repository.
 
 ---
 
-**Happy Coding! 🎉**
-"# Root-Care" 
-"# Startup" 
+**Happy Coding! 🎉** 
