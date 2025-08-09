@@ -10,7 +10,7 @@ const getBackendUrl = () => {
     return "";
   }
   // For development, use the environment variable or default
-  return import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+  return import.meta.env.VITE_BACKEND_URL || "http://localhost:5000" ;
 };
 
 const backendUrl = getBackendUrl();
