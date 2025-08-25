@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route , useLocation} from "react-router-dom"; // ✅ Required!
 import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
@@ -22,20 +22,21 @@ import AddProduct from "./pages/seller/AddProduct.jsx";
 import ProductList from "./pages/seller/ProductList.jsx";
 import Orders from "./pages/seller/Orders.jsx";
 import Dashboard from "./pages/seller/Dashboard.jsx";
-
-
+import { initializeFullSecurity } from "./utils/security.js";
 
 const App = () => {
-
   const isSellerPath = useLocation().pathname.includes("seller");
   const {showUserLogin , isSeller, isLoading} = useAppContext();
+  
+  // Initialize security measures on app load
+  useEffect(() => {
+    initializeFullSecurity();
+  }, []);
+  
   return (
     <div className="text-default min-h-screen text-gray-700 bg-white">
       {isSellerPath ? null : <Navbar />}
-
       <Toaster />
-
-
       <div className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"} `}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -61,5 +62,4 @@ const App = () => {
     </div>
   );
 };
-
 export default App;

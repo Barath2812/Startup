@@ -61,14 +61,10 @@ const GooglePayButton = ({ amount, orderId, onSuccess, onError, disabled = false
 
             const { paymentDataRequest } = paymentIntentResponse.data;
 
-            // Create payment data request with proper callbacks
+            // Use the server-provided payment data request with callbacks
             const paymentDataRequestMessage = {
-                apiVersion: paymentDataRequest.apiVersion,
-                apiVersionMinor: paymentDataRequest.apiVersionMinor,
-                allowedPaymentMethods: paymentDataRequest.allowedPaymentMethods,
-                transactionInfo: paymentDataRequest.transactionInfo,
-                merchantInfo: paymentDataRequest.merchantInfo,
-                callbackIntents: ['PAYMENT_AUTHORIZATION'],
+                ...paymentDataRequest,
+                // Ensure callbacks are properly set
                 paymentDataCallbacks: {
                     onPaymentAuthorized: (paymentData) => {
                         console.log('Payment authorized:', paymentData);

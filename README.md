@@ -24,7 +24,7 @@ A full-stack e-commerce platform built with React.js, Node.js, and MongoDB. This
 ### Technical Features
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Real-time Updates**: Live cart updates and order status
-- **Payment Integration**: Multiple payment methods (COD, Online, Stripe)
+- **Payment Integration**: Multiple payment methods (COD, Online, Razorpay)
 - **Image Upload**: Cloudinary integration for product images
 - **Email Notifications**: Automated email service for orders
 - **Search Functionality**: Product search with filtering
@@ -51,7 +51,7 @@ A full-stack e-commerce platform built with React.js, Node.js, and MongoDB. This
 - **Multer** - File upload handling
 - **Cloudinary** - Cloud image storage
 - **Nodemailer** - Email service
-- **Stripe** - Payment processing
+- **Razorpay** - Payment processing
 - **CORS** - Cross-origin resource sharing
 
 ## 🚀 Getting Started
@@ -96,7 +96,8 @@ A full-stack e-commerce platform built with React.js, Node.js, and MongoDB. This
    CLOUDINARY_CLOUD_NAME=your_cloudinary_name
    CLOUDINARY_API_KEY=your_cloudinary_key
    CLOUDINARY_API_SECRET=your_cloudinary_secret
-   STRIPE_SECRET_KEY=your_stripe_secret_key
+   RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
    EMAIL_USER=your_email
    EMAIL_PASS=your_email_password
    FRONTEND_URL=http://localhost:5173
@@ -198,7 +199,8 @@ Startup/
 ### Orders
 - `POST /api/order/cod` - Place COD order
 - `POST /api/order/online` - Place online order
-- `POST /api/order/stripe` - Place Stripe order
+- `POST /api/order/razorpay` - Create Razorpay order
+- `POST /api/order/razorpay/verify` - Verify Razorpay payment
 - `GET /api/order/user` - Get user orders
 - `GET /api/order/seller` - Get all orders (seller only)
 

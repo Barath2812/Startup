@@ -44,9 +44,8 @@ Deploy both frontend and backend together in a single Vercel project.
    CLOUDINARY_API_SECRET=your_cloudinary_secret
    
    # Payment
-   STRIPE_SECRET_KEY=your_stripe_key
-   STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
-   STRIPE_ACCOUNT_ID=your_stripe_account_id
+   RAZORPAY_KEY_ID=your_razorpay_key_id
+   RAZORPAY_KEY_SECRET=your_razorpay_key_secret
    GOOGLE_PAY_MERCHANT_ID=your_google_pay_merchant_id
    GOOGLE_PAY_MERCHANT_NAME=Your Store Name
    
@@ -100,9 +99,8 @@ Deploy frontend and backend as separate Vercel projects.
    CLOUDINARY_CLOUD_NAME=your_cloudinary_name
    CLOUDINARY_API_KEY=your_cloudinary_key
    CLOUDINARY_API_SECRET=your_cloudinary_secret
-   STRIPE_SECRET_KEY=your_stripe_key
-   STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
-   STRIPE_ACCOUNT_ID=your_stripe_account_id
+   RAZORPAY_KEY_ID=your_razorpay_key_id
+   RAZORPAY_KEY_SECRET=your_razorpay_key_secret
    GOOGLE_PAY_MERCHANT_ID=your_google_pay_merchant_id
    GOOGLE_PAY_MERCHANT_NAME=Your Store Name
    EMAIL_USER=your_email
@@ -233,7 +231,7 @@ FRONTEND_URL=https://your-custom-domain.com
 
 4. **Payment Issues**:
    - Check if payment environment variables are set
-   - Verify Google Pay/Stripe configurations
+   - Verify Google Pay/Razorpay configurations
    - Test payment flow in development first
 
 ### Debug Steps:

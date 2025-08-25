@@ -3,8 +3,9 @@ const crypto = require('crypto');
 // Google Pay configuration
 const GOOGLE_PAY_CONFIG = {
     environment: process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'TEST',
-    merchantId: process.env.GOOGLE_PAY_MERCHANT_ID || '12345678901234567890',
-    merchantName: process.env.GOOGLE_PAY_MERCHANT_NAME || 'RootCare Store',
+    // Google-assigned merchantId required in PRODUCTION only
+    merchantId: process.env.GOOGLE_PAY_MERCHANT_ID,
+    merchantName: process.env.GOOGLE_PAY_MERCHANT_NAME || 'Demo Store',
     allowedCardNetworks: ['MASTERCARD', 'VISA'],
     allowedCardAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
     countryCode: 'IN',
@@ -30,8 +31,9 @@ const generatePaymentDataRequest = (amount, orderId) => {
             tokenizationSpecification: {
                 type: 'PAYMENT_GATEWAY',
                 parameters: {
-                    gateway: 'stripe',
-                    gatewayMerchantId: process.env.STRIPE_ACCOUNT_ID || 'acct_1234567890'
+                    gateway: 'razorpay',
+                    // Prefer dedicated Razorpay merchant ID if provided, fallback to key id for tests
+                    gatewayMerchantId: process.env.RAZORPAY_MERCHANT_ID || process.env.RAZORPAY_KEY_ID || 'rzp_test_your_key_id'
                 }
             }
         }],
@@ -41,11 +43,29 @@ const generatePaymentDataRequest = (amount, orderId) => {
             currencyCode: GOOGLE_PAY_CONFIG.currencyCode,
             countryCode: GOOGLE_PAY_CONFIG.countryCode
         },
-        merchantInfo: {
-            merchantId: GOOGLE_PAY_CONFIG.merchantId,
-            merchantName: GOOGLE_PAY_CONFIG.merchantName
-        },
-        callbackIntents: ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS', 'SHIPPING_OPTION']
+        merchantInfo: GOOGLE_PAY_CONFIG.environment === 'PRODUCTION'
+            ? { merchantId: GOOGLE_PAY_CONFIG.merchantId, merchantName: GOOGLE_PAY_CONFIG.merchantName }
+            : { merchantName: GOOGLE_PAY_CONFIG.merchantName },
+        callbackIntents: ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS', 'SHIPPING_OPTION'],
+        paymentDataCallbacks: {
+            onPaymentAuthorized: (paymentData) => {
+                console.log('Payment authorized:', paymentData);
+                return {
+                    result: 'SUCCESS'
+                };
+            },
+            onPaymentDataChanged: (paymentData) => {
+                console.log('Payment data changed:', paymentData);
+                return {
+                    newTransactionInfo: {
+                        totalPriceStatus: 'FINAL',
+                        totalPrice: amount.toString(),
+                        currencyCode: GOOGLE_PAY_CONFIG.currencyCode,
+                        countryCode: GOOGLE_PAY_CONFIG.countryCode
+                    }
+                };
+            }
+        }
     };
 
     return paymentDataRequest;
@@ -97,7 +117,7 @@ const processGooglePayPayment = async (paymentData, orderDetails) => {
         }
 
         // In a real implementation, you would:
-        // 1. Send the token to your payment processor (Stripe, etc.)
+        // 1. Send the token to your payment processor (Razorpay, etc.)
         // 2. Process the payment
         // 3. Return the result
 
@@ -143,12 +163,31 @@ const getGooglePayConfig = () => {
             tokenizationSpecification: {
                 type: 'PAYMENT_GATEWAY',
                 parameters: {
-                    gateway: 'stripe',
-                    gatewayMerchantId: process.env.STRIPE_ACCOUNT_ID || 'acct_1234567890'
+                    gateway: 'razorpay',
+                    gatewayMerchantId: process.env.RAZORPAY_KEY_ID || 'rzp_test_your_key_id'
                 }
             }
         }],
-        callbackIntents: ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS', 'SHIPPING_OPTION']
+        callbackIntents: ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS', 'SHIPPING_OPTION'],
+        paymentDataCallbacks: {
+            onPaymentAuthorized: (paymentData) => {
+                console.log('Payment authorized:', paymentData);
+                return {
+                    result: 'SUCCESS'
+                };
+            },
+            onPaymentDataChanged: (paymentData) => {
+                console.log('Payment data changed:', paymentData);
+                return {
+                    newTransactionInfo: {
+                        totalPriceStatus: 'FINAL',
+                        totalPrice: paymentData.transactionInfo?.totalPrice || '0',
+                        currencyCode: GOOGLE_PAY_CONFIG.currencyCode,
+                        countryCode: GOOGLE_PAY_CONFIG.countryCode
+                    }
+                };
+            }
+        }
     };
 };
 
@@ -171,12 +210,13 @@ const createPaymentIntent = async (amount, orderId) => {
 // Validate payment response
 const validatePaymentResponse = (paymentResponse) => {
     try {
-        if (!paymentResponse || !paymentResponse.paymentData) {
+        // Accept both shapes: { paymentData: {...} } and raw paymentData {...}
+        const paymentData = paymentResponse?.paymentData || paymentResponse;
+
+        if (!paymentData) {
             throw new Error('Invalid payment response');
         }
 
-        const { paymentData } = paymentResponse;
-        
         // Validate payment data structure
         if (!paymentData.paymentMethodData || !paymentData.paymentMethodData.tokenizationData) {
             throw new Error('Invalid payment data structure');

@@ -16,9 +16,9 @@ CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
-# Stripe
-STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
-STRIPE_WEBHOOK_SECRET=whsec_your_stripe_webhook_secret
+# Razorpay
+RAZORPAY_KEY_ID=rzp_test_your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
 
 # Email (Gmail)
 EMAIL_USER=your_gmail_address@gmail.com
@@ -28,13 +28,13 @@ EMAIL_PASSWORD=your_gmail_app_password
 PORT=5000
 ```
 
-## Stripe Setup
+## Razorpay Setup
 
-1. Create a Stripe account at https://stripe.com
-2. Get your test API keys from the Stripe Dashboard
-3. Set up a webhook endpoint in Stripe Dashboard:
-   - URL: `https://your-domain.com/api/order/webhook`
-   - Events: `checkout.session.completed`
+1. Create a Razorpay account at https://razorpay.com
+2. Get your test API keys from the Razorpay Dashboard
+3. Set up webhook endpoints in Razorpay Dashboard:
+   - URL: `https://your-domain.com/api/order/razorpay/webhook`
+   - Events: `payment.captured`, `payment.failed`
 4. Copy the webhook secret to your `.env` file
 
 ## Email Setup (Gmail)
@@ -57,7 +57,7 @@ npm start
 ## API Endpoints
 
 - `POST /api/order/cod` - Place COD order
-- `POST /api/order/stripe` - Create Stripe checkout session
-- `POST /api/order/webhook` - Stripe webhook handler
+- `POST /api/order/razorpay` - Create Razorpay order
+- `POST /api/order/razorpay/verify` - Verify Razorpay payment
 - `GET /api/order/user` - Get user orders
 - `GET /api/order/seller` - Get all orders (seller) 

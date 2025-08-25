@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../hooks/useAppContext";
 import GooglePayButton from "../components/GooglePayButton";
+import RazorpayButton from "../components/RazorpayButton";
 
 const Cart = () => {
   const {
@@ -340,12 +341,12 @@ const Cart = () => {
 
           <select onChange={(e) => setPaymentOption(e.target.value)} value={paymentOption} className="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none">
             <option value="COD">Cash On Delivery</option>
-            <option value="Online">Online Payment (Google Pay)</option>
+            <option value="Online">Online Payment (Razorpay)</option>
           </select>
           <p className="text-xs text-gray-500 mt-1">
             {paymentOption === "COD" 
               ? "Pay when you receive your order" 
-              : "Pay securely with Google Pay"
+              : "Pay securely with Razorpay"
             }
           </p>
         </div>
@@ -389,9 +390,17 @@ const Cart = () => {
           </button>
         ) : (
           <div className="mt-6 space-y-3">
-            <GooglePayButton
+            <RazorpayButton
               amount={(getCartAmount() * 1.02).toFixed(2)}
               orderId={`order_${Date.now()}`}
+              items={cartArray.map((item) => ({ productId: item._id, quantity: item.quantity }))}
+              addressId={selectedAddress?._id}
+              customer={{
+                name: user?.name,
+                email: user?.email,
+                contact: user?.phone,
+                address: selectedAddress ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}` : ''
+              }}
               onSuccess={handleGooglePaySuccess}
               onError={handleGooglePayError}
               disabled={googlePayLoading}

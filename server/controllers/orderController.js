@@ -6,7 +6,7 @@ const Product = require("../models/Product");
 const Order = require("../models/Order");
 const User = require("../models/User");
 const Address = require("../models/Address");
-// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Disabled online payments
+const { createOrder, verifyPaymentSignature, getPaymentDetails } = require('../utils/razorpayService');
 const { sendOrderEmails, isEmailConfigured } = require("../utils/emailService");
 
 const placeOrderCOD = async (req, res) => {
@@ -190,18 +190,152 @@ const placeOrderOnline = async (req, res) => {
     }
 }
 
-// Updated Stripe function to use Google Pay
-const placeOrderStripe = async (req, res) => {
-    // Redirect to Google Pay implementation
-    return await placeOrderOnline(req, res);
+// Razorpay payment function
+const placeOrderRazorpay = async (req, res) => {
+    try {
+        const { items, addressId, amount } = req.body;
+        const { userId } = req.user;
+        
+        if(!addressId || !items || items.length === 0){
+            return res.status(400).json({ success: false, message: "Please fill all fields" });
+        }
+
+        // Calculate amount
+        let totalAmount = 0;
+        for (const item of items) {
+            const product = await Product.findById(item.productId);
+            if (!product) {
+                return res.status(400).json({ success: false, message: `Product ${item.productId} not found` });
+            }
+            totalAmount += product.offerPrice * item.quantity;
+        }
+
+        // Add Tax Charge (2%)
+        const tax = Math.floor(totalAmount * 0.02);
+        const finalAmount = totalAmount + tax;
+
+        // Convert to paise (Razorpay expects amount in paise)
+        const amountInPaise = finalAmount * 100;
+
+        // Create Razorpay order
+        const razorpayOrder = await createOrder(amountInPaise, 'INR', `order_${Date.now()}`);
+        
+        if (!razorpayOrder.success) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Failed to create payment order" 
+            });
+        }
+
+        res.status(200).json({ 
+            success: true, 
+            message: "Payment order created successfully",
+            orderId: razorpayOrder.order.id,
+            amount: finalAmount,
+            currency: 'INR',
+            keyId: process.env.RAZORPAY_KEY_ID
+        });
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ success: false, message: error.message });
+    }
 }
 
-// Stripe webhook disabled - online payments disabled
-const stripeWebhook = async (req, res) => {
-    return res.status(400).json({ 
-        success: false, 
-        message: "Online payments are currently disabled. Webhook processing is not available." 
-    });
+// Razorpay payment verification
+const verifyRazorpayPayment = async (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, items, addressId } = req.body;
+        const { userId } = req.user;
+
+        if(!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !addressId || !items || items.length === 0){
+            return res.status(400).json({ success: false, message: "Please provide all required fields" });
+        }
+
+        // Verify payment signature
+        const isSignatureValid = verifyPaymentSignature(razorpay_order_id, razorpay_payment_id, razorpay_signature);
+        
+        if (!isSignatureValid) {
+            return res.status(400).json({ success: false, message: "Invalid payment signature" });
+        }
+
+        // Get payment details from Razorpay
+        const paymentDetails = await getPaymentDetails(razorpay_payment_id);
+        
+        if (!paymentDetails.success) {
+            return res.status(400).json({ success: false, message: "Failed to verify payment" });
+        }
+
+        // Calculate amount
+        let totalAmount = 0;
+        for (const item of items) {
+            const product = await Product.findById(item.productId);
+            if (!product) {
+                return res.status(400).json({ success: false, message: `Product ${item.productId} not found` });
+            }
+            totalAmount += product.offerPrice * item.quantity;
+        }
+
+        // Add Tax Charge (2%)
+        const tax = Math.floor(totalAmount * 0.02);
+        const finalAmount = totalAmount + tax;
+
+        // Create order with payment details
+        const newOrder = await Order.create({
+            userId: userId,
+            items,
+            amount: finalAmount,
+            addressId,
+            paymentMethod: "Online",
+            paymentDetails: {
+                razorpayOrderId: razorpay_order_id,
+                razorpayPaymentId: razorpay_payment_id,
+                paymentMethod: "Razorpay",
+                status: paymentDetails.payment.status,
+                timestamp: new Date()
+            },
+            status: "confirmed",
+            isPaid: true
+        });
+
+        // Send email and WhatsApp notifications
+        try {
+            const user = await User.findById(userId);
+            const address = await Address.findById(addressId);
+            const populatedOrder = await Order.findById(newOrder._id).populate("items.productId");
+            
+            const orderDetails = {
+                order: populatedOrder,
+                user,
+                address
+            };
+
+            // Send email notification
+            if (isEmailConfigured()) {
+                try {
+                    await sendOrderEmails(orderDetails);
+                } catch (emailError) {
+                    console.error('Failed to send order emails:', emailError);
+                }
+            } else {
+                console.log('Email not configured. Order placed without email notification.');
+            }
+
+        } catch (notificationError) {
+            console.error('Failed to send notifications:', notificationError);
+        }
+
+        res.status(200).json({ 
+            success: true, 
+            message: "Payment verified and order placed successfully",
+            orderId: newOrder._id,
+            paymentId: razorpay_payment_id
+        });
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ success: false, message: error.message });
+    }
 }
 
 // Get Orders by userId : /api/order/user
@@ -298,4 +432,4 @@ const testEmail = async (req, res) => {
     }
 };
 
-module.exports = {placeOrderCOD, placeOrderOnline, placeOrderStripe, stripeWebhook, getUserOrders, getAllOrders, testEmail};
+module.exports = {placeOrderCOD, placeOrderOnline, placeOrderRazorpay, verifyRazorpayPayment, getUserOrders, getAllOrders, testEmail};
