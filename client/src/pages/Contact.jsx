@@ -92,9 +92,9 @@ const Contact = () => {
                 <div>
                   <h3 className="text-lg font-medium text-gray-900">Address</h3>
                   <p className="text-gray-600 mt-1">
-                    123 Business Street<br />
-                    City, State 12345<br />
-                    Country
+                    No : 6 Keezhakasakudy<br />
+                    Karaikal<br />
+                    Puducherry 609609
                   </p>
                 </div>
               </div>
@@ -108,8 +108,7 @@ const Contact = () => {
                 <div>
                   <h3 className="text-lg font-medium text-gray-900">Phone</h3>
                   <p className="text-gray-600 mt-1">
-                    +1 (555) 123-4567<br />
-                    +1 (555) 987-6543
+                    +91 99442322751<br />
                   </p>
                 </div>
               </div>
@@ -123,8 +122,7 @@ const Contact = () => {
                 <div>
                   <h3 className="text-lg font-medium text-gray-900">Email</h3>
                   <p className="text-gray-600 mt-1">
-                    info@yourcompany.com<br />
-                    support@yourcompany.com
+                    rootcare25@gmail.com<br />
                   </p>
                 </div>
               </div>
@@ -288,24 +286,21 @@ const Contact = () => {
             <div className="bg-white rounded-lg shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">What is your return policy?</h3>
               <p className="text-gray-600">
-                We offer a 30-day return policy for most items. Products must be in original condition 
-                with all packaging intact. Contact our support team to initiate a return.
+                Non returnable or Refundable.
               </p>
             </div>
 
             <div className="bg-white rounded-lg shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Do you ship internationally?</h3>
               <p className="text-gray-600">
-                Yes, we ship to most countries worldwide. Shipping costs and delivery times vary by location. 
-                You can check shipping options during checkout.
+                Wthin India.
               </p>
             </div>
 
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">How can I become a seller?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">More Info</h3>
               <p className="text-gray-600">
-                To become a seller, please contact our business development team. We'll guide you through 
-                the registration process and help you set up your store.
+                Mail to rootcare25@gmail.com.
               </p>
             </div>
           </div>
