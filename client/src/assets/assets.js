@@ -21,7 +21,7 @@ import boxicon from './check-mark.png';
 import soap from './soap.jpg';
 import facewash from './facewash.jpg';
 import sunscreen from './sunscreen.jpg';
-
+import shampoo from './shampoo.jpg';
 export const assets = {
   icon,
   root,
@@ -46,6 +46,7 @@ export const assets = {
   soap,
   facewash,
   sunscreen,
+  shampoo,
 };
 
 export const categories = [
@@ -91,136 +92,11 @@ export const categories = [
     image: soap, // Using multanimitti as placeholder
     bgColor: '#FFF5E6',
   },
-];
-
-export const dummyProducts = [
   {
-    _id: 'gd46g23g',
-    name: 'Root Care Herbal Hair Oil',
-    category: 'Oil',
-    price: 250,
-    offerPrice: 200,
-    image: [hairoil],
-    description: [
-      'Natural Hair Oil',
-      'Hair Growth & Anti-hairfall , Anti-Dandruff & Scalp Nourishment',
-      'Ayurvedic Blend for Men & Women 100ml',
-    ],
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-01-01T00:00:00.000Z',
-    instock: true,
-  },
-  {
-    _id: 'gd46g23h',
-    name: 'Aloe Vera Gel',
-    category: 'Gel',
-    price: 250,
-    offerPrice: 200,
-    image: [aloevera],
-    description: [
-      'Natural Hair Oil',
-      'Hair Growth & Anti-hairfall , Anti-Dandruff & Scalp Nourishment',
-      'Ayurvedic Blend for Men & Women 100ml',
-    ],
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-01-01T00:00:00.000Z',
-    instock: true,
-  },
-  {
-    _id: 'gd46g23i',
-    name: 'Lip Balm',
-    category: 'Balm',
-    price: 250,
-    offerPrice: 200,
-    image: [lipbalm],
-    description: [
-      'Natural Hair Oil',
-      'Hair Growth & Anti-hairfall , Anti-Dandruff & Scalp Nourishment',
-      'Ayurvedic Blend for Men & Women 100ml',
-    ],
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-01-01T00:00:00.000Z',
-    instock: true,
-  },
-  {
-    _id: 'gd46g23j',
-    name: 'Multani Mitti',
-    category: 'Powder',
-    price: 250,
-    offerPrice: 200,
-    image: [multanimitti],
-    description: [
-      'Natural Hair Oil',
-      'Hair Growth & Anti-hairfall , Anti-Dandruff & Scalp Nourishment',
-      'Ayurvedic Blend for Men & Women 100ml',
-    ],
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-01-01T00:00:00.000Z',
-    instock: true,
-  },
-  {
-    _id: 'gd46g23x',
-    name: 'Multani Mitti 2',
-    category: 'Powder',
-    price: 250,
-    offerPrice: 200,
-    image: [multanimitti],
-    description: [
-      'Natural Hair Oil',
-      'Hair Growth & Anti-hairfall , Anti-Dandruff & Scalp Nourishment',
-      'Ayurvedic Blend for Men & Women 100ml',
-    ],
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-01-01T00:00:00.000Z',
-    instock: true,
-  },
-  {
-    _id: 'gd46g23y',
-    name: 'Natural Sunscreen SPF 50',
-    category: 'Sunscreen',
-    price: 350,
-    offerPrice: 280,
-    image: [aloevera],
-    description: [
-      'Natural Sun Protection',
-      'Broad Spectrum SPF 50, UVA/UVB Protection',
-      'Water Resistant, Non-Greasy Formula 50ml',
-    ],
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-01-01T00:00:00.000Z',
-    instock: true,
-  },
-  {
-    _id: 'gd46g23z',
-    name: 'Herbal Face Wash',
-    category: 'Face Wash',
-    price: 180,
-    offerPrice: 150,
-    image: [hairoil],
-    description: [
-      'Gentle Cleansing Formula',
-      'Deep Cleansing & Oil Control',
-      'Suitable for All Skin Types 100ml',
-    ],
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-01-01T00:00:00.000Z',
-    instock: true,
-  },
-  {
-    _id: 'gd46g23w',
-    name: 'Natural Herbal Soap',
-    category: 'Soaps',
-    price: 120,
-    offerPrice: 95,
-    image: [multanimitti],
-    description: [
-      'Handcrafted Natural Soap',
-      'Moisturizing & Gentle on Skin',
-      'Made with Natural Ingredients 100g',
-    ],
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-01-01T00:00:00.000Z',
-    instock: true,
+    text: 'Shampoo',
+    path: 'Shampoo',
+    image: shampoo, // Using multanimitti as placeholder
+    bgColor: '#FFF5E6',
   },
 ];
 
@@ -228,21 +104,17 @@ export const footerLinks = [
   {
     title: 'Quick Links',
     links: [
-      { text: 'Home', link: '#' },
-      { text: 'Best Sellers', link: '#' },
-      { text: 'Offers & Deals', link: '#' },
-      { text: 'Contact Us', link: '#' },
-      { text: 'FAQs', link: '#' },
+      { text: 'Home', link: 'https://startup-frontend-flame.vercel.app/' },
+      { text: 'Offers & Deals', link: 'https://startup-frontend-flame.vercel.app/products' },
+      { text: 'Contact Us', link: 'https://startup-frontend-flame.vercel.app/contact' },
     ],
   },
   {
     title: 'Need help?',
     links: [
-      { text: 'Delivery information', link: '#' },
-      { text: 'Return & Refund Policy', link: '#' },
-      { text: 'Payment Methodds', link: '#' },
-      { text: 'Track Your Order', link: '#' },
-      { text: 'Contact Us', link: '#' },
+      { text: 'Delivery information', link: 'https://startup-frontend-flame.vercel.app/contact' },
+      { text: 'Return & Refund Policy', link: 'https://startup-frontend-flame.vercel.app/contact' },
+      { text: 'Contact Us', link: 'https://startup-frontend-flame.vercel.app/contact' },
     ],
   },
   {
@@ -254,83 +126,4 @@ export const footerLinks = [
       { text: 'Youtube', link: '#' },
     ],
   },
-];
-export const dummyAddresses = [
-  {
-    street: "12/4, Lake View Road, Adyar",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    pincode: "600020",
-    country: "India",
-  },
-  {
-    street: "C-204, Green Meadows, Hinjewadi Phase 2",
-    city: "Pune",
-    state: "Maharashtra",
-    pincode: "411035",
-    country: "India",
-  },
-  {
-    street: "Flat 3B, Sky Heights, New Town",
-    city: "Kolkata",
-    state: "West Bengal",
-    pincode: "700091", 
-    country: "India",
-  },
-  {
-    street: "27, MG Road, Indiranagar",
-    city: "Bengaluru",
-    state: "Karnataka",
-    pincode: "560001",
-    country: "India",
-  },
-  {
-    street: "H-55, Sector 62",
-    city: "Noida",
-    state: "Uttar Pradesh",
-    pincode: "201301",
-    country: "India",
-  },
-];
-
-export const dummyOrders = [
-  {
-    _id: "1a2b3c4d",
-    userID: "user123",
-    items:[
-      {
-        product:dummyProducts[3],
-        quantity:1,
-        _id:"1a2b3c4d-1",
-      },
-    ],
-    amount: 200,
-    address:dummyAddresses[0],
-    status:"Order Placed",
-    paymentType:"Online",
-    isPaid:true,
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-01-01T00:00:00.000Z',
-  },
-  {
-    _id: "1a2b3c4d5e",
-    userID: "user124",
-    items:[
-      {
-        product:dummyProducts[2],
-        quantity:1,
-        _id:"1a2b3c4d5e-1",
-      },
-    ],
-    amount: 200,
-    address:dummyAddresses[0],
-    status:"Order Placed",
-    paymentType:"COD",
-    isPaid:false,
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-01-01T00:00:00.000Z',
-    
-  },
-  
-  
 ];
