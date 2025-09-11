@@ -100,30 +100,3 @@ export const categories = [
   },
 ];
 
-export const footerLinks = [
-  {
-    title: 'Quick Links',
-    links: [
-      { text: 'Home', link: 'https://startup-frontend-flame.vercel.app/' },
-      { text: 'Offers & Deals', link: 'https://startup-frontend-flame.vercel.app/products' },
-      { text: 'Contact Us', link: 'https://startup-frontend-flame.vercel.app/contact' },
-    ],
-  },
-  {
-    title: 'Need help?',
-    links: [
-      { text: 'Delivery information', link: 'https://startup-frontend-flame.vercel.app/contact' },
-      { text: 'Return & Refund Policy', link: 'https://startup-frontend-flame.vercel.app/contact' },
-      { text: 'Contact Us', link: 'https://startup-frontend-flame.vercel.app/contact' },
-    ],
-  },
-  {
-    title: ' Follow Us',
-    links: [
-      { text: 'Instagram', link: '#' },
-      { text: 'Twitter', link: '#' },
-      { text: 'Facebook', link: '#' },
-      { text: 'Youtube', link: '#' },
-    ],
-  },
-];
