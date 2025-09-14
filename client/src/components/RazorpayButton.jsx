@@ -152,13 +152,23 @@ const RazorpayButton = ({ amount, orderId, items, addressId, customer = {}, onSu
             // Mobile-specific handling for UPI app exits
             let paymentCompleted = false;
             let pageVisibilityTimer = null;
+            let hasLeftPage = false;
+
+            // Track when user leaves the page (goes to UPI app)
+            const handleBeforeUnload = () => {
+                if (!paymentCompleted) {
+                    hasLeftPage = true;
+                    console.log('User left page for UPI app');
+                }
+            };
 
             // Track page visibility changes (mobile UPI app switching)
             const handleVisibilityChange = () => {
                 if (document.hidden && !paymentCompleted) {
                     // User switched to UPI app
+                    hasLeftPage = true;
                     console.log('User switched to UPI app');
-                } else if (!document.hidden && !paymentCompleted) {
+                } else if (!document.hidden && !paymentCompleted && hasLeftPage) {
                     // User returned from UPI app
                     console.log('User returned from UPI app');
                     // Set a timer to check if payment was completed
@@ -168,13 +178,15 @@ const RazorpayButton = ({ amount, orderId, items, addressId, customer = {}, onSu
                             toast.error('Payment cancelled');
                             setIsLoading(false);
                         }
-                    }, 3000); // 3 second grace period
+                    }, 2000); // 2 second grace period
                 }
             };
 
-            // Add visibility change listener for mobile
+            // Add event listeners for mobile
             if (isMobile) {
                 document.addEventListener('visibilitychange', handleVisibilityChange);
+                window.addEventListener('beforeunload', handleBeforeUnload);
+                window.addEventListener('pagehide', handleBeforeUnload);
             }
 
             // Capture explicit failure reasons from Razorpay widget
@@ -204,9 +216,31 @@ const RazorpayButton = ({ amount, orderId, items, addressId, customer = {}, onSu
                 }
                 if (isMobile) {
                     document.removeEventListener('visibilitychange', handleVisibilityChange);
+                    window.removeEventListener('beforeunload', handleBeforeUnload);
+                    window.removeEventListener('pagehide', handleBeforeUnload);
                 }
                 return originalHandler(response);
             };
+
+            // Add a fallback timer for mobile payments
+            if (isMobile) {
+                const fallbackTimer = setTimeout(() => {
+                    if (!paymentCompleted && hasLeftPage) {
+                        console.log('Fallback: Payment timeout on mobile');
+                        toast.error('Payment cancelled');
+                        setIsLoading(false);
+                    }
+                }, 30000); // 30 second timeout
+
+                // Clear fallback timer when payment completes
+                const clearFallbackTimer = () => {
+                    clearTimeout(fallbackTimer);
+                };
+                
+                rzp.on('payment.success', clearFallbackTimer);
+                rzp.on('payment.failed', clearFallbackTimer);
+                rzp.on('payment.cancelled', clearFallbackTimer);
+            }
 
             rzp.open();
 
