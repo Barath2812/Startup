@@ -76,6 +76,11 @@ const RazorpayButton = ({ amount, orderId, items, addressId, customer = {}, onSu
                 order_id: orderResponse.orderId,
                 handler: async function (response) {
                     try {
+                        // Validate payment response before verification
+                        if (!response.razorpay_payment_id || !response.razorpay_order_id || !response.razorpay_signature) {
+                            throw new Error('Invalid payment response received');
+                        }
+
                         // Verify payment on server
                         const { data: verifyResponse } = await axios.post('/api/order/razorpay/verify', {
                             razorpay_order_id: response.razorpay_order_id,
@@ -95,6 +100,8 @@ const RazorpayButton = ({ amount, orderId, items, addressId, customer = {}, onSu
                         console.error('Payment verification error:', error);
                         toast.error(error.response?.data?.message || 'Payment verification failed');
                         onError && onError(error);
+                    } finally {
+                        setIsLoading(false);
                     }
                 },
                 prefill: {
@@ -126,8 +133,16 @@ const RazorpayButton = ({ amount, orderId, items, addressId, customer = {}, onSu
                 },
                 modal: {
                     ondismiss: function() {
+                        console.log('Payment modal dismissed without payment');
+                        toast.error('Payment cancelled');
                         setIsLoading(false);
                     }
+                },
+                // Add timeout for UPI payments
+                timeout: 300000, // 5 minutes timeout
+                retry: {
+                    enabled: true,
+                    max_count: 3
                 }
             };
 
@@ -140,6 +155,13 @@ const RazorpayButton = ({ amount, orderId, items, addressId, customer = {}, onSu
                 const description = response?.error?.description || response?.error?.reason || 'Payment failed. Please try again.';
                 toast.error(description);
                 onError && onError(response);
+                setIsLoading(false);
+            });
+
+            // Handle UPI specific errors
+            rzp.on('payment.cancelled', function (response) {
+                console.log('Payment cancelled by user:', response);
+                toast.error('Payment cancelled');
                 setIsLoading(false);
             });
             rzp.open();
