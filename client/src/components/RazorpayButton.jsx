@@ -149,9 +149,38 @@ const RazorpayButton = ({ amount, orderId, items, addressId, customer = {}, onSu
             // Initialize Razorpay payment
             const rzp = new Razorpay(options);
 
+            // Mobile-specific handling for UPI app exits
+            let paymentCompleted = false;
+            let pageVisibilityTimer = null;
+
+            // Track page visibility changes (mobile UPI app switching)
+            const handleVisibilityChange = () => {
+                if (document.hidden && !paymentCompleted) {
+                    // User switched to UPI app
+                    console.log('User switched to UPI app');
+                } else if (!document.hidden && !paymentCompleted) {
+                    // User returned from UPI app
+                    console.log('User returned from UPI app');
+                    // Set a timer to check if payment was completed
+                    pageVisibilityTimer = setTimeout(() => {
+                        if (!paymentCompleted) {
+                            console.log('Payment not completed after returning from UPI app');
+                            toast.error('Payment cancelled');
+                            setIsLoading(false);
+                        }
+                    }, 3000); // 3 second grace period
+                }
+            };
+
+            // Add visibility change listener for mobile
+            if (isMobile) {
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+            }
+
             // Capture explicit failure reasons from Razorpay widget
             rzp.on('payment.failed', function (response) {
                 console.error('Razorpay payment.failed:', response);
+                paymentCompleted = true;
                 const description = response?.error?.description || response?.error?.reason || 'Payment failed. Please try again.';
                 toast.error(description);
                 onError && onError(response);
@@ -161,9 +190,24 @@ const RazorpayButton = ({ amount, orderId, items, addressId, customer = {}, onSu
             // Handle UPI specific errors
             rzp.on('payment.cancelled', function (response) {
                 console.log('Payment cancelled by user:', response);
+                paymentCompleted = true;
                 toast.error('Payment cancelled');
                 setIsLoading(false);
             });
+
+            // Override the handler to track completion
+            const originalHandler = options.handler;
+            options.handler = async function(response) {
+                paymentCompleted = true;
+                if (pageVisibilityTimer) {
+                    clearTimeout(pageVisibilityTimer);
+                }
+                if (isMobile) {
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                }
+                return originalHandler(response);
+            };
+
             rzp.open();
 
         } catch (error) {
