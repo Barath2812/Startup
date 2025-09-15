@@ -186,7 +186,7 @@ app.use('/api/order', initializeServicesForAPI, orderRoutes);
 app.use('/api/contact', initializeServicesForAPI, contactRoutes);
 app.use('/api/analytics', initializeServicesForAPI, analyticsRoutes);
 app.use('/api/payment', initializeServicesForAPI, paymentRoutes);
-app.use('/api/razorpay', razorpayRoutes);
+app.use('/api/razorpay', initializeServicesForAPI, razorpayRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
