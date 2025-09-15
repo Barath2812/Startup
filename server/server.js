@@ -13,7 +13,7 @@ const addressRoutes = require('./routes/addressRoute');
 const contactRoutes = require('./routes/contactRoute');
 const analyticsRoutes = require('./routes/analyticsRoute');
 const paymentRoutes = require('./routes/paymentRoute');
-
+const razorpayRoutes = require('./routes/razorpayRoute');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -186,6 +186,7 @@ app.use('/api/order', initializeServicesForAPI, orderRoutes);
 app.use('/api/contact', initializeServicesForAPI, contactRoutes);
 app.use('/api/analytics', initializeServicesForAPI, analyticsRoutes);
 app.use('/api/payment', initializeServicesForAPI, paymentRoutes);
+app.use('/api/razorpay', razorpayRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
