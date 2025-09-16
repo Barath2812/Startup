@@ -10,8 +10,8 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// ✅ Create order
-router.post("/", async (req, res) => {
+// ✅ Create order endpoint
+router.post("/create-order", async (req, res) => {
   try {
     const { amount, currency = "INR", receipt } = req.body;
 
@@ -37,8 +37,8 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ Verify payment
-router.post("/verify", (req, res) => {
+// ✅ Verify payment endpoint
+router.post("/verify-payment", (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
