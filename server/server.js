@@ -47,36 +47,18 @@ app.use(cookieParser());
 // CORS Configuration
 const allowedOrigins = [
   "https://startup-frontend-flame.vercel.app",
-  "http://localhost:3000",                   
+  "http://localhost:3000",
   "http://localhost:5173",
   process.env.FRONTEND_URL,
-
 ].filter(Boolean);
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    console.log(`🌐 Request from origin: ${origin}`);
-    console.log(`🏭 Environment: ${process.env.NODE_ENV}`);
-    console.log(`✅ Allowed origins:`, allowedOrigins);
-    
-    // Check if origin is in allowed list
-    if (allowedOrigins.includes(origin)) {
-      console.log(`✅ Origin "${origin}" is in allowed list`);
-      return callback(null, true);
-    }
-    
-    // For development, allow localhost origins
-    if (process.env.NODE_ENV !== 'production' && origin.includes('localhost')) {
-      console.log(`✅ Origin "${origin}" is localhost in development`);
-      return callback(null, true);
-    }
-    
-    // For production, allow vercel.app domains
-    if (process.env.NODE_ENV === 'production' && origin.includes('vercel.app')) {
-      console.log(`✅ Origin "${origin}" is vercel.app in production`);
+    if (allowedOrigins.includes(origin) || 
+        (process.env.NODE_ENV !== 'production' && origin.includes('localhost')) ||
+        (process.env.NODE_ENV === 'production' && origin.includes('vercel.app'))) {
       return callback(null, true);
     }
     
@@ -90,8 +72,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// Optional: Handle all OPTIONS preflight requests
 app.options('*', cors(corsOptions));
 
 // Health Check Routes
@@ -144,7 +124,6 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// CORS Test endpoint
 app.get('/api/cors-test', (req, res) => {
   res.json({
     message: 'CORS test successful',
@@ -153,7 +132,6 @@ app.get('/api/cors-test', (req, res) => {
   });
 });
 
-// Simple test endpoint (no database required)
 app.get('/api/test', (req, res) => {
   res.json({
     message: 'Server is working!',
@@ -162,7 +140,6 @@ app.get('/api/test', (req, res) => {
   });
 });
 
-// Initialize services before API routes
 const initializeServicesForAPI = async (req, res, next) => {
   try {
     await initializeServices();
@@ -176,7 +153,7 @@ const initializeServicesForAPI = async (req, res, next) => {
   }
 };
 
-// API Routes
+// API Routes - Correctly mapped to the imported routers
 app.use('/api/user', initializeServicesForAPI, userRoutes);
 app.use('/api/seller', initializeServicesForAPI, sellerRoutes);
 app.use('/api/product', initializeServicesForAPI, productRoutes);
