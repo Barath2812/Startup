@@ -104,7 +104,7 @@ const Cart = () => {
     }
   };
 
-  const handleGooglePaySuccess = async (paymentData) => {
+  const handleRazorpaySuccess = async (paymentData) => {
     if(!selectedAddress){
       toast.error("Please select an address");
       return;
@@ -117,13 +117,15 @@ const Cart = () => {
 
     setGooglePayLoading(true);
     try {
-      const {data} = await axios.post("/api/order/online", {
+      const {data} = await axios.post("/api/order/razorpay/verify", {
         items : cartArray.map((item) => ({
           productId: item._id,
           quantity: item.quantity,
         })),
         addressId: selectedAddress._id,
-        paymentData: paymentData
+        razorpay_order_id: paymentData.razorpay_order_id,
+        razorpay_payment_id: paymentData.razorpay_payment_id,
+        razorpay_signature: paymentData.razorpay_signature
       }, {withCredentials: true});
       
       if(data.success){
@@ -141,8 +143,8 @@ const Cart = () => {
     }
   };
 
-  const handleGooglePayError = (error) => {
-    console.error("Google Pay error:", error);
+  const handleRazorpayError = (error) => {
+    console.error("Razorpay error:", error);
     toast.error("Payment failed. Please try again.");
   };
 
@@ -401,8 +403,8 @@ const Cart = () => {
                 contact: user?.phone,
                 address: selectedAddress ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}` : ''
               }}
-              onSuccess={handleGooglePaySuccess}
-              onError={handleGooglePayError}
+              onSuccess={handleRazorpaySuccess}
+              onError={handleRazorpayError}
               disabled={googlePayLoading}
             />
             {googlePayLoading && (
