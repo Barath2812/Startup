@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { getBackendUrl } from '../utils/config';
 
 const RazorpayButton = ({ amount, customer = {}, onSuccess, onError }) => {
   const [isLoading, setIsLoading] = useState(false);
-  // Use an environment variable for the API base URL
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+  // Use the proper backend URL configuration
+  const API_BASE_URL = getBackendUrl();
 
   useEffect(() => {
     // load Razorpay script once
@@ -45,8 +46,8 @@ const RazorpayButton = ({ amount, customer = {}, onSuccess, onError }) => {
             const verifyRes = await axios.post(`${API_BASE_URL}/api/razorpay/verify-payment`, response);
 
             if (verifyRes.data.success) {
-              alert('✅ Payment successful!');
-              onSuccess && onSuccess(verifyRes.data);
+              // Pass the response data to the success handler
+              onSuccess && onSuccess(response);
             } else {
               throw new Error(verifyRes.data.message);
             }
